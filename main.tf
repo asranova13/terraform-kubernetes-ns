@@ -6,9 +6,9 @@ resource "kubernetes_namespace_v1" "this" {
   }
 }
 
-resource "kubernetes_resource_quota_v1" "pod_limit" {
+resource "kubernetes_resource_quota" "this" {
   metadata {
-    name      = "pod-limit"
+    name      = "pod-quota"
     namespace = kubernetes_namespace_v1.this.metadata[0].name
   }
 
