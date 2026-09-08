@@ -1,19 +1,76 @@
 ## Usage
 
-Add this code to your tf file to start making this namespace module.
+Add this code to your Terraform file to create a namespace using this module.
 
 ```tf
-module ns-demo {
-    source      = "farrukh90/ns/kubernetes"
-    name        = "demo-ns"
-    max_pods    = 100
+module "ns-demo" {
+  source = "farrukh90/ns/kubernetes"
+
+  name = "demo-ns"
+
+  labels = {
+    mylabel = "level-value"
+  }
+
+  annotations = {
+    mylabel = "level-value"
+  }
+
+  pod = 100
+
+  PodLimit = {
+    cpu    = "500m"
+    memory = "1024Mi"
+  }
+
+  PVCLimit = {
+    storage = "2Gi"
+  }
+
+  ContainerLimit = {
+    cpu    = "500m"
+    memory = "1024Mi"
+  }
 }
 ```
-## Pod limit
-Namespaces created by this module are capped at 100 pods (`max_pods` var, change it if you need a different number). It's just a `ResourceQuota` under the hood, so k8s handles the rejecting once you hit the cap.
+
+## Namespace Configuration
+
+The module allows you to configure the namespace name, labels, and annotations.
+
+- `name` — specifies the Kubernetes namespace name.
+- `labels` — specifies labels to apply to the namespace.
+- `annotations` — specifies annotations to apply to the namespace.
+
+## Pod Quota
+
+Namespaces created by this module have a configurable pod quota using the `pod` variable.
+
+The module creates a Kubernetes `ResourceQuota` to control the number of pods in the namespace.
+
+## Resource Limits
+
+The module creates a Kubernetes `LimitRange` to control resource limits within the namespace.
+
+- `PodLimit` — sets the maximum CPU and memory allowed for a pod.
+- `PVCLimit` — sets the minimum storage size for a PersistentVolumeClaim.
+- `ContainerLimit` — sets the default CPU and memory limits for containers.
+
+## Default Values
+
+| Variable | Default |
+|---|---|
+| `name` | `demo` |
+| `labels` | `mylabel = "level-value"` |
+| `annotations` | `mylabel = "level-value"` |
+| `pod` | `1` |
+| `PodLimit` | CPU: `500m`, Memory: `1024Mi` |
+| `PVCLimit` | Storage: `2Gi` |
+| `ContainerLimit` | CPU: `500m`, Memory: `1024Mi` |
 
 ## Run
-Make sure to run these commands to initialize and create the module.
+
+Run the following commands to initialize Terraform and create the resources.
 
 ```bash
 terraform init
@@ -21,7 +78,7 @@ terraform apply
 ```
 
 ## Outputs
+
 | Name | Description |
-|------|-------------|
-| `name` | name of the created namespace |
-| `max_pods` | pod limit enforced on the namespace |
+|---|---|
+| `name` | Name of the created namespace |
