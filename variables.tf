@@ -19,3 +19,9 @@ variable "annotations" {
     "mylabel" = "level-value"
   }
 }
+
+variable "pod" {
+  description = "Please specify the amount of pods to deploy"
+  type        = number
+  default     = 1
+}

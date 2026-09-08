@@ -1,11 +1,3 @@
-resource "kubernetes_namespace_v1" "this" {
-  metadata {
-    annotations = var.annotations
-    labels      = var.labels
-    name        = var.name
-  }
-}
-
 resource "kubernetes_resource_quota" "this" {
   metadata {
     name      = "pod-quota"
@@ -14,7 +6,9 @@ resource "kubernetes_resource_quota" "this" {
 
   spec {
     hard = {
-      pods = "100"
+      pods = tostring(var.pods)
     }
+
+    scopes = ["BestEffort"]
   }
 }
